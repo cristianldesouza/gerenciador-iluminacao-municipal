@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Magnani Inspections</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+
+<body>
+    <fieldset>
+        <legend>Cadastro de postes</legend>
+        <form id="cadastro-poste">
+            <label for="etiqueta">Etiqueta:</label>
+            <input type="text" name="etiqueta"/><br>
+
+            <label for="material">Material:</label>
+            <input type="radio" name="material" value="F" checked>Ferro
+            <input type="radio" name="material" value="M">Madeira
+            <input type="radio" name="material" value="C">Concreto<br />
+
+            <label for="latitude">Latitude:</label>
+            <input type="text" name="latitude"> <br>
+
+            <label for="longitude">Longitude:</label>
+            <input type="text" name="longitude"><br>
+
+            <button type="submit">Adicionar poste</button>
+        </form>
+    </fieldset>
+
+    <fieldset>
+        <legend>Cadastro de inspeção</legend>
+        <form id="cadastro-inspecao">
+            <label for="estado-conservacao">Estado de conservação</label>
+            <input type="radio" name="estado-conservacao" value="true">Adequado
+            <input type="radio" name="estado-conservacao" value="false">Não adequado
+            <br/>
+
+            <label for="prumo">Prumo</label>
+            <input type="radio" name="prumo" value="true">Adequado
+            <input type="radio" name="prumo" value="false">Não adequado
+            <br/>
+
+            <label for="condicao-fiacao">Condição fiação</label>
+            <input type="radio" name="condicao-fiacao" value="true">Adequado
+            <input type="radio" name="condicao-fiacao" value="false">Não adequado
+            <br/>
+
+            <label for="data">Data</label>
+            <input type="date" name="data">
+            <br/>
+
+            <label for="poste-etiqueta">Etiqueta do poste:</label>
+            <input type="text" name="poste-etiqueta"/>
+            <br/>
+
+            <button type="submit">Adicionar inspeção</button>
+        </form>
+    </fieldset>
+    <script src="main.js"></script>
+</body>
+
+</html>

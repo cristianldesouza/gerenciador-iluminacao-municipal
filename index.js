@@ -8,6 +8,9 @@ const server = express();
 //permite o uso de json no express -- 
 server.use(express.json());
 
+//servir arquivo estático --
+server.use('/', express.static('public'));
+
 //rota de isnserção do poste --
 server.post('/inserir-poste', (request, response) => {
     const poste = request.body;

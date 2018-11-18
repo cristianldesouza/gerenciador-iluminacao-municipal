@@ -48,9 +48,9 @@ exports.inserirInspecao = function inserirInspecao({estadoConservacao, prumo, co
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
                 }
-                const ID = result.rows[0];
+                const { id } = result.rows[0];
                 done();
-                complete(error, { ID });
+                complete(error, { ID: id });
             });
         }        
 
