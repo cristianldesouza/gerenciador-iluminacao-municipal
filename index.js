@@ -34,7 +34,9 @@ server.post('/inserir-inspecao', (request, response) => {
 
 //rota relatório 1
 server.get('/postes-nao-inspecionados', (request, response) => {
-    const intervalo = request.body;
+    const dataInicial = request.query['data-inicial'];
+    const dataFinal = request.query['data-final'];
+    const intervalo = { dataInicial, dataFinal };
     db.postesNaoInspecionados(intervalo, (error, postes) => {
         if (error) {
             response.status(500).send();

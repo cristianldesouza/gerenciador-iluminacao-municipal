@@ -2,9 +2,9 @@
   "name": "magnani-inspections",
   "version": "1.0.0",
   "description": "",
-  "main": "db.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "nodemon ."
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
   "dependencies": {
     "express": "^4.16.4",
     "pg": "^7.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   }
 }

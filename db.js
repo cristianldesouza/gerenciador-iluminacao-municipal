@@ -15,16 +15,16 @@ const pool = new pg.Pool(config);
 // função que insere poste, exportada para ser utilizada em outro arquivo --
 exports.inserirPoste = function inserirPoste({etiqueta, material, latitude, longitude}, complete) {
     //interpolação de string -- 
-    const sql = `INSERT INTO poste (etiqueta, material, latitude, longitude) VALUES (${etiqueta}, ${material}, ${latitude}, ${longitude})`;
-
+    const sql = `INSERT INTO poste (etiqueta, material, latitude, longitude) VALUES ('${etiqueta}', '${material}', ${latitude}, ${longitude})`;
+    console.log(sql)
     pool.connect((error, client, done) => {
         if(error) {
-            console.error("Não foi possível conectar ao banco" + error);
+            console.error("Não foi possível conectar ao banco " + error);
             complete(error);
         }else {
             client.query(sql, (error) => {
                 if (error) {
-                    console.error("Não foi possível consultar o banco" + error);
+                    console.error("Não foi possível consultar o banco " + error);
                 }
                 done();
                 complete(error);
@@ -37,16 +37,16 @@ exports.inserirPoste = function inserirPoste({etiqueta, material, latitude, long
 
 // função que insere inspeção, exportada para ser utilizada em outro arquivo --
 exports.inserirInspecao = function inserirInspecao({estadoConservacao, prumo, condicaoFiacao, data, posteEtiqueta}, complete) {
-    const sql = `INSERT INTO inspecao (estado_conservacao, prumo, condicao_fiacao, data, poste_etiqueta) VALUES (${estadoConservacao}, ${prumo}, ${condicaoFiacao}, ${data}, ${posteEtiqueta}) RETURNING ID`;
+    const sql = `INSERT INTO inspecao (estado_conservacao, prumo, condicao_fiacao, data, poste_etiqueta) VALUES (${estadoConservacao}, ${prumo}, ${condicaoFiacao}, '${data}', '${posteEtiqueta}') RETURNING ID`;
 
     pool.connect((error, client, done) => {
         if(error) {
-            console.error("Não foi possível conectar ao banco" + error);
+            console.error("Não foi possível conectar ao banco " + error);
             complete(error);
         }else {
             client.query(sql, (error, result) => {
                 if (error) {
-                    console.error("Não foi possível consultar o banco" + error);
+                    console.error("Não foi possível consultar o banco " + error);
                 }
                 const ID = result.rows[0];
                 done();
@@ -59,16 +59,16 @@ exports.inserirInspecao = function inserirInspecao({estadoConservacao, prumo, co
 
 //select relatório 1
 exports.postesNaoInspecionados = function postesNaoInspecionados({dataInicial, dataFinal}, complete) {
-    const sql = `SELECT poste.* FROM poste LEFT JOIN inspecao on poste.etiqueta = inspecao.poste_etiqueta AND inspecao.data >= ${dataInicial} AND inspecao.data <= ${dataFinal} WHERE inspecao.ID IS NULL`;
-
+    const sql = `SELECT poste.* FROM poste LEFT JOIN inspecao on poste.etiqueta = inspecao.poste_etiqueta AND inspecao.data >= '${dataInicial}' AND inspecao.data <= '${dataFinal}' WHERE inspecao.ID IS NULL`;
+   
     pool.connect((error, client, done) => {
         if(error) {
-            console.error("Não foi possível conectar ao banco" + error);
+            console.error("Não foi possível conectar ao banco " + error);
             complete(error);
         }else {
             client.query(sql, (error, result) => {
                 if (error) {
-                    console.error("Não foi possível consultar o banco" + error);
+                    console.error("Não foi possível consultar o banco " + error);
                 }
                 const postes = result.rows;
                 done();
