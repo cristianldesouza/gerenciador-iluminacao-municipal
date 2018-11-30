@@ -40,7 +40,7 @@ function postesNaoInspecionados({dataInicial, dataFinal}, complete) {
     fetch(`${serverURL}/postes-nao-inspecionados?data-inicial=${dataInicial}&data-final=${dataFinal}`)
     .then((response) => {
         if (response.status === 500) {
-            complete('não foi possível gerar o relatório')
+            complete('não foi possível gerar o relatório');
         } else {
             return response.json()
                 .then((body) => {
@@ -50,6 +50,21 @@ function postesNaoInspecionados({dataInicial, dataFinal}, complete) {
     })
     .catch(complete);
 }
+
+function notaIluminacao ({mes, ano}, complete) {
+    fetch(`${serverURL}/saude-iluminacao?mes=${mes}&ano=${ano}`)
+    .then((response) => {
+        if (response.status === 500) {
+            complete('não foi possível gerar a nota');
+        } else {
+            return response.json()
+            .then((body) => {
+                complete(undefined, body);
+            });
+        }
+    })
+    .catch(complete);
+};
 
 document.getElementById('cadastro-poste').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -156,5 +171,23 @@ function atualizarTabelaPostesNaoInspecionados() {
 };
 
 document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
+
+function atualizarNotaIluminacao () {
+    const inputNota = document.getElementById('nota-saude');
+    const mesAno = document.getElementById('mes-ano').value;
+    const ano = mesAno.split('-')[0];
+    const mes = mesAno.split('-')[1];
+
+    notaIluminacao({mes, ano}, (erro, response) => {
+        if (erro) {
+            alert("Não foi dessa vez");
+        } else {
+            inputNota.value = `${response.nota}/${response.total}`;
+        }
+    });
+    
+};
+
+document.getElementById('gerar-nota').addEventListener('click', atualizarNotaIluminacao);
 
 

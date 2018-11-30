@@ -64,7 +64,15 @@ server.get('/postes-nao-inspecionados', (request, response) => {
 
 //rota relatório 2
 server.get('/saude-iluminacao', (request, response) => {
-    
+    const mes = request.query['mes'];
+    const ano = request.query['ano'];
+    db.saudeMensalIluminacao({mes, ano}, (error, nota) =>{
+        if (error) {
+            response.status(500).send();
+        } else {
+            response.send(nota);
+        }
+    });
 });
 
 //porta de conexão --
