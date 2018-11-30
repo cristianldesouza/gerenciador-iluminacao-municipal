@@ -26,13 +26,26 @@ server.post('/inserir-poste', (request, response) => {
 //rota de inserção da inspeção --
 server.post('/inserir-inspecao', (request, response) => {
     const inspecao = request.body;
-    db.inserirInspecao(inspecao, (error, inspecao) => {
-        if (error) {
+    const mes = inspecao.data.split('-')[1];
+    const ano = inspecao.data.split('-')[0];
+    db.posteTemInspecaoNoMes({etiqueta: inspecao.posteEtiqueta, mes, ano}, (erro, resultado) => {
+        if (erro) {
             response.status(500).send();
         } else {
-            response.send(inspecao);
+            if (resultado) {
+                response.status(409).send();
+            } else {
+                db.inserirInspecao(inspecao, (error, inspecao) => {
+                    if (error) {
+                        response.status(500).send();
+                    } else {
+                        response.send(inspecao);
+                    }
+                });
+            }
         }
     });
+    
 });
 
 //rota relatório 1

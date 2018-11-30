@@ -45,15 +45,40 @@ exports.inserirInspecao = function inserirInspecao({estadoConservacao, prumo, co
             complete(error);
         }else {
             client.query(sql, (error, result) => {
+                let id;
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
+                }else {
+                    ({ id } = result.rows[0]);
                 }
-                const { id } = result.rows[0];
                 done();
                 complete(error, { ID: id });
             });
         }        
 
+    });
+}
+
+//verificar inspecao
+exports.posteTemInspecaoNoMes = function posteTemInspecaoNoMes ({etiqueta, ano, mes}, complete) {
+    const sql = `SELECT * FROM inspecao WHERE poste_etiqueta = '${etiqueta}' AND EXTRACT(MONTH FROM data) = '${mes}' AND EXTRACT(YEAR FROM data) = '${ano}'`;
+
+    pool.connect((error, client, done) => {
+        if (error) {
+            console.error("Não foi possível conectar ao banco " + error);
+            complete(error)
+        } else {
+            client.query(sql, (error, result) => {
+                let resultado;
+                if (error) {
+                    console.error("Não foi possível consultar o b anco " + error);
+                } else {
+                    resultado = result.rows.length > 0;
+                }
+                done();
+                complete(error, resultado);
+            });
+        }
     });
 }
 
