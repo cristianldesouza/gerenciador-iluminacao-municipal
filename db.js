@@ -67,12 +67,15 @@ exports.postesNaoInspecionados = function postesNaoInspecionados({dataInicial, d
             complete(error);
         }else {
             client.query(sql, (error, result) => {
+                let postes;
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
+                }else {
+                    postes = result.rows;
                 }
-                const postes = result.rows;
                 done();
                 complete(error, postes);
+
             });
         }  
     });

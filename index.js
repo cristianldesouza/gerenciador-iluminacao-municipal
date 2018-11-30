@@ -49,6 +49,11 @@ server.get('/postes-nao-inspecionados', (request, response) => {
     });
 });
 
+//rota relatório 2
+server.get('/saude-iluminacao', (request, response) => {
+    
+});
+
 //porta de conexão --
 server.listen('8080', () => {
     console.log("Servidor rodando!")

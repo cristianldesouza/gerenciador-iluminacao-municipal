@@ -60,6 +60,46 @@
             <button type="submit">Adicionar inspeção</button>
         </form>
     </fieldset>
+
+    <fieldset>
+        <legend>Postes Não Inspecionados</legend>
+        <label for="data-inicial">Data Inicial</label>
+        <input type="date" name="data-inicial" id="data-inicial">
+
+        <label for="data-final">Data Final</label>
+        <input type="date" name="data-final" id="data-final">
+
+        <table id="postes-nao-inspecionados" border="1">
+            <thead>
+                <tr>
+                    <th>
+                        Etiqueta
+                    </th>
+                    <th>
+                        Material
+                    </th>
+                    <th>
+                        Latitude
+                    </th>
+                    <th>
+                        Longitude
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button type="button" id="atualizar-postes-nao-inspecionados">Gerar Relatório Postes Não Inspecionados</button>
+    </fieldset>
+    <fieldset>
+        <legend>Saúde da Iluminação Pública</legend>
+        <label for="mes-ano">Mês e Ano desejado</label>
+        <input type="month" id="mes-ano" name="mes-ano">
+
+        <label for="nota-saude">Nota da Iluminação Pública do Mês Desejado:</label>
+        <input type="text" name="nota-saude" id="nota-saude">
+    </fieldset>
     <script src="main.js"></script>
 </body>
 

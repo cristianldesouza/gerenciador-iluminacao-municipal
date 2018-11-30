@@ -111,4 +111,50 @@ document.getElementById('cadastro-inspecao').addEventListener('submit', (event) 
     });
 });
 
+function atualizarTabelaPostesNaoInspecionados() {
+    const tabela = document.getElementById('postes-nao-inspecionados');
+    const tbody = tabela.getElementsByTagName('tbody')[0];
+    const dataInicial = document.getElementById('data-inicial').value;
+    const dataFinal = document.getElementById('data-final').value;
+
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+    postesNaoInspecionados({dataInicial, dataFinal}, (erro, postes) => {
+        if (erro) {
+            alert('não foi dessa vez');
+        }else {
+            alert('acertou, mizeravi');
+
+            for(let i = 0; i < postes.length; i++) {
+                const poste = postes[i];
+                const row = document.createElement('tr');
+                const etiqueta = document.createElement('td');
+                const material = document.createElement('td');
+                const latitude = document.createElement('td');
+                const longitude = document.createElement('td');
+
+                switch (poste.material) {
+                    case 'F': material.innerHTML = 'Ferro'; break;
+                    case 'M': material.innerHTML = 'Madeira'; break;
+                    case 'C': material.innerHTML = 'Concreto'; break;
+                }
+                etiqueta.innerHTML = poste.etiqueta;
+                latitude.innerHTML= poste.latitude;
+                longitude.innerHTML = poste.longitude;
+
+                row.appendChild(etiqueta);
+                row.appendChild(material);
+                row.appendChild(latitude);
+                row.appendChild(longitude);
+
+                tbody.appendChild(row);
+            }
+        }
+    });
+
+};
+
+document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
+
 
