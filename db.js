@@ -13,15 +13,17 @@ const config = {
 const pool = new pg.Pool(config);
 
 // função que insere poste, exportada para ser utilizada em outro arquivo --
-exports.inserirPoste = function inserirPoste({etiqueta, material, latitude, longitude}, complete) {
+exports.inserirPoste = function inserirPoste({ etiqueta, material, latitude, longitude }, complete) {
     //interpolação de string -- 
     const sql = `INSERT INTO poste (etiqueta, material, latitude, longitude) 
                  VALUES ('${etiqueta}', '${material}', ${latitude}, ${longitude})`;
+
+    //conexão ao pg
     pool.connect((error, client, done) => {
-        if(error) {
+        if (error) {
             console.error("Não foi possível conectar ao banco " + error);
             complete(error);
-        }else {
+        } else {
             client.query(sql, (error) => {
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
@@ -29,40 +31,40 @@ exports.inserirPoste = function inserirPoste({etiqueta, material, latitude, long
                 done();
                 complete(error);
             });
-        }        
+        }
 
     });
 
 }
 
 // função que insere inspeção, exportada para ser utilizada em outro arquivo --
-exports.inserirInspecao = function inserirInspecao({estadoConservacao, prumo, condicaoFiacao, data, posteEtiqueta}, complete) {
+exports.inserirInspecao = function inserirInspecao({ estadoConservacao, prumo, condicaoFiacao, data, posteEtiqueta }, complete) {
     const sql = `INSERT INTO inspecao (estado_conservacao, prumo, condicao_fiacao, data, poste_etiqueta) 
                  VALUES (${estadoConservacao}, ${prumo}, ${condicaoFiacao}, '${data}', '${posteEtiqueta}')
                  RETURNING ID`;
 
     pool.connect((error, client, done) => {
-        if(error) {
+        if (error) {
             console.error("Não foi possível conectar ao banco " + error);
             complete(error);
-        }else {
+        } else {
             client.query(sql, (error, result) => {
                 let id;
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
-                }else {
+                } else {
                     ({ id } = result.rows[0]);
                 }
                 done();
                 complete(error, { ID: id });
             });
-        }        
+        }
 
     });
 }
 
 //verificar inspecao
-exports.posteTemInspecaoNoMes = function posteTemInspecaoNoMes ({etiqueta, ano, mes}, complete) {
+exports.posteTemInspecaoNoMes = function posteTemInspecaoNoMes({ etiqueta, ano, mes }, complete) {
     const sql = `SELECT * 
                 FROM inspecao 
                 WHERE poste_etiqueta = '${etiqueta}' AND
@@ -89,36 +91,36 @@ exports.posteTemInspecaoNoMes = function posteTemInspecaoNoMes ({etiqueta, ano, 
 }
 
 //select relatório 1
-exports.postesNaoInspecionados = function postesNaoInspecionados({dataInicial, dataFinal}, complete) {
+exports.postesNaoInspecionados = function postesNaoInspecionados({ dataInicial, dataFinal }, complete) {
     const sql = `SELECT poste.* 
                 FROM poste 
                 LEFT JOIN inspecao on poste.etiqueta = inspecao.poste_etiqueta 
                 AND inspecao.data >= '${dataInicial}' 
                 AND inspecao.data <= '${dataFinal}' 
                 WHERE inspecao.ID IS NULL`;
-   
+
     pool.connect((error, client, done) => {
-        if(error) {
+        if (error) {
             console.error("Não foi possível conectar ao banco " + error);
             complete(error);
-        }else {
+        } else {
             client.query(sql, (error, result) => {
                 let postes;
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
-                }else {
+                } else {
                     postes = result.rows;
                 }
                 done();
                 complete(error, postes);
 
             });
-        }  
+        }
     });
 }
 
 //select relatório 2
-exports.saudeMensalIluminacao = function saudeMensalIluminacao({mes, ano}, complete) {
+exports.saudeMensalIluminacao = function saudeMensalIluminacao({ mes, ano }, complete) {
     const sql = `SELECT coalesce(sum(pontuacao), 0) as nota, coalesce(sum(total), 0) as total
                  FROM (
                      (
@@ -151,41 +153,64 @@ exports.saudeMensalIluminacao = function saudeMensalIluminacao({mes, ano}, compl
                 let nota;
                 let total;
                 if (erro) {
-                    console.error("Não foi possível consultar o banco "+ erro);
+                    console.error("Não foi possível consultar o banco " + erro);
                 } else {
-                    ({nota, total} = result.rows[0]);
+                    ({ nota, total } = result.rows[0]);
                 }
                 done();
-                complete(erro, {nota, total});
+                complete(erro, { nota, total });
             });
         }
     });
 
 };
 
+//função que gera a lista de postes --
 exports.listaPostes = function listaPostes(complete) {
     const sql = `SELECT * FROM poste ORDER BY etiqueta`;
 
     pool.connect((error, client, done) => {
-        if(error) {
+        if (error) {
             console.error("Não foi possível conectar ao banco " + error);
             complete(error);
-        }else {
+        } else {
             client.query(sql, (error, result) => {
                 let postes;
                 if (error) {
                     console.error("Não foi possível consultar o banco " + error);
-                }else {
+                } else {
                     postes = result.rows;
                 }
                 done();
                 complete(error, postes);
 
             });
-        }  
+        }
     });
 }
 
+//função que gera informações do gráfico (várias recursividades malucas ???)
+exports.relatorioSaudeIluminacao = function relatorioSaudeIluminacao({inicial, final}, complete, resultado = []) {
+    if ((inicial.mes > final.mes && inicial.ano === final.ano) || inicial.ano > final.ano) {
+        complete('Data inicial deve ser menor que a data final');
+    }
 
+    exports.saudeMensalIluminacao(inicial, (erro, nota) => {
+        if(erro) {
+            complete(erro);
+        }else {
+            if (inicial.mes === final.mes && inicial.ano === final.ano) {
+                complete(erro, resultado.concat([nota]));
+            } else {
+                const novoInicial = {
+                    mes: inicial.mes + 1 === 13 ? 1 : inicial.mes + 1,
+                    ano: inicial.mes + 1 === 13 ? inicial.ano + 1 : inicial.ano
+                };
+                exports.relatorioSaudeIluminacao({ inicial: novoInicial, final }, complete, resultado.concat([nota]));
+            }
+        }
+    });
+
+}
 
 

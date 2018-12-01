@@ -3,18 +3,18 @@ const serverURL = 'http://localhost:8080';
 //funções de comunicação cliente-servidor --
 function inserirPoste(poste, complete) {
     fetch(`${serverURL}/inserir-poste`, {
-        method: 'POST', 
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(poste)
     })
-    .then((response) => {
-        if (response.status === 500) {
-            complete('não foi possível inserir o poste');
-        } else {
-            complete();
-        }
-    })
-    .catch(complete);
+        .then((response) => {
+            if (response.status === 500) {
+                complete('não foi possível inserir o poste');
+            } else {
+                complete();
+            }
+        })
+        .catch(complete);
 }
 
 function inserirInspecao(inspecao, complete) {
@@ -23,62 +23,78 @@ function inserirInspecao(inspecao, complete) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(inspecao)
     })
-    .then((response) => {
-        if(response.status === 500) {
-            complete('não foi possível inserir a inspeção');
-        } else {
-            return response.json()
-                .then((body) => {
-                    complete(undefined, body);
-                });
-        }
-    })
-    .catch(complete);
+        .then((response) => {
+            if (response.status === 500) {
+                complete('não foi possível inserir a inspeção');
+            } else {
+                return response.json()
+                    .then((body) => {
+                        complete(undefined, body);
+                    });
+            }
+        })
+        .catch(complete);
 }
 
-function postesNaoInspecionados({dataInicial, dataFinal}, complete) {
+function postesNaoInspecionados({ dataInicial, dataFinal }, complete) {
     fetch(`${serverURL}/postes-nao-inspecionados?data-inicial=${dataInicial}&data-final=${dataFinal}`)
-    .then((response) => {
-        if (response.status === 500) {
-            complete('não foi possível gerar o relatório');
-        } else {
-            return response.json()
-                .then((body) => {
-                    complete(undefined, body);
-                });
-        }
-    })
-    .catch(complete);
+        .then((response) => {
+            if (response.status === 500) {
+                complete('não foi possível gerar o relatório');
+            } else {
+                return response.json()
+                    .then((body) => {
+                        complete(undefined, body);
+                    });
+            }
+        })
+        .catch(complete);
 }
 
-function listaPostes (complete) {
+function relatorioSaudeIluminacao({ inicial, final }, complete) {
+    fetch(`${serverURL}/relatorio-saude-iluminacao?inicial-mes=${inicial.mes}&inicial-ano=${inicial.ano}&final-mes=${final.mes}&final-ano=${final.ano}`)
+        .then((response) => {
+            if (response.status === 500) {
+                complete('não foi possível gerar o relatório');
+            } else {
+                return response.json()
+                    .then((body) => {
+                        complete(undefined, body);
+                    });
+            }
+        })
+        .catch(complete);
+}
+
+
+function listaPostes(complete) {
     fetch(`${serverURL}/postes`)
-    .then((response) => {
-        if (response.status === 500) {
-            complete('não foi possível gerar a lista');
-        } else {
-            return response.json()
-                .then((body) => {
-                    complete(undefined, body);
-                });
-        }
-    })
-    .catch(complete);
+        .then((response) => {
+            if (response.status === 500) {
+                complete('não foi possível gerar a lista');
+            } else {
+                return response.json()
+                    .then((body) => {
+                        complete(undefined, body);
+                    });
+            }
+        })
+        .catch(complete);
 }
 
-function notaIluminacao ({mes, ano}, complete) {
+function notaIluminacao({ mes, ano }, complete) {
     fetch(`${serverURL}/saude-iluminacao?mes=${mes}&ano=${ano}`)
-    .then((response) => {
-        if (response.status === 500) {
-            complete('não foi possível gerar a nota');
-        } else {
-            return response.json()
-            .then((body) => {
-                complete(undefined, body);
-            });
-        }
-    })
-    .catch(complete);
+        .then((response) => {
+            if (response.status === 500) {
+                complete('não foi possível gerar a nota');
+            } else {
+                return response.json()
+                    .then((body) => {
+                        complete(undefined, body);
+                    });
+            }
+        })
+        .catch(complete);
 };
 
 document.getElementById('cadastro-poste').addEventListener('submit', (event) => {
@@ -142,13 +158,13 @@ function atualizarTabelaPostesNaoInspecionados() {
     while (tbody.firstChild) {
         tbody.removeChild(tbody.firstChild);
     }
-    postesNaoInspecionados({dataInicial, dataFinal}, (erro, postes) => {
+    postesNaoInspecionados({ dataInicial, dataFinal }, (erro, postes) => {
         if (erro) {
             alert('não foi dessa vez');
-        }else {
+        } else {
             alert('acertou, mizeravi');
 
-            for(let i = 0; i < postes.length; i++) {
+            for (let i = 0; i < postes.length; i++) {
                 const poste = postes[i];
                 const row = document.createElement('tr');
                 const etiqueta = document.createElement('td');
@@ -162,7 +178,7 @@ function atualizarTabelaPostesNaoInspecionados() {
                     case 'C': material.innerHTML = 'Concreto'; break;
                 }
                 etiqueta.innerHTML = poste.etiqueta;
-                latitude.innerHTML= poste.latitude;
+                latitude.innerHTML = poste.latitude;
                 longitude.innerHTML = poste.longitude;
 
                 row.appendChild(etiqueta);
@@ -177,7 +193,7 @@ function atualizarTabelaPostesNaoInspecionados() {
 
 };
 
-function atualizarTabelaPostes(){
+function atualizarTabelaPostes() {
     const tabela = document.getElementById('lista-postes');
     const tbody = tabela.getElementsByTagName('tbody')[0];
 
@@ -188,10 +204,10 @@ function atualizarTabelaPostes(){
     listaPostes((erro, postes) => {
         if (erro) {
             alert('Não foi dessa vez');
-        }else {
+        } else {
             alert('acertou, mizeravi');
 
-            for(let i = 0; i < postes.length; i++) {
+            for (let i = 0; i < postes.length; i++) {
                 const poste = postes[i];
                 const row = document.createElement('tr');
                 const etiqueta = document.createElement('td');
@@ -205,7 +221,7 @@ function atualizarTabelaPostes(){
                     case 'C': material.innerHTML = 'Concreto'; break;
                 }
                 etiqueta.innerHTML = poste.etiqueta;
-                latitude.innerHTML= poste.latitude;
+                latitude.innerHTML = poste.latitude;
                 longitude.innerHTML = poste.longitude;
 
                 row.appendChild(etiqueta);
@@ -222,24 +238,88 @@ function atualizarTabelaPostes(){
 }
 
 
-function atualizarNotaIluminacao () {
+function atualizarNotaIluminacao() {
     const inputNota = document.getElementById('nota-saude');
     const mesAno = document.getElementById('mes-ano').value;
     const ano = mesAno.split('-')[0];
     const mes = mesAno.split('-')[1];
 
-    notaIluminacao({mes, ano}, (erro, response) => {
+    notaIluminacao({ mes, ano }, (erro, response) => {
         if (erro) {
             alert("Não foi dessa vez");
         } else {
             inputNota.value = `${response.nota}/${response.total}`;
         }
     });
-    
+
 };
+
+function atualizarGraficoSaudeIluminacao() {
+    const inicialAnoMes = document.getElementById('mes-ano-inicial').value;
+    const finalAnoMes = document.getElementById('mes-ano-final').value;
+    const mesInicial = inicialAnoMes.split('-')[1];
+    const anoInicial = inicialAnoMes.split('-')[0];
+    const mesFinal = finalAnoMes.split('-')[1];
+    const anoFinal = finalAnoMes.split('-')[0];
+
+    const inicial = {
+        mes: +mesInicial,
+        ano: +anoInicial
+    }
+
+    const final = {
+        mes: +mesFinal,
+        ano: +anoFinal
+    }
+
+    relatorioSaudeIluminacao({ inicial, final }, (erro, resultado) => {
+        console.log(resultado);
+        if (erro) {
+            alert('Não foi dessa vez');
+        } else {
+            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const labels = [];
+            let mesAtual = inicial.mes;
+            let anoAtual = inicial.ano;
+            while (mesAtual <= final.mes && anoAtual === final.ano || anoAtual < final.ano) {
+                labels.push(meses[mesAtual - 1] + ' - ' + anoAtual);
+                anoAtual = mesAtual + 1 === 13 ? anoAtual + 1 : anoAtual;
+                mesAtual = mesAtual + 1 === 13 ? 1 : mesAtual + 1;
+            }
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "Grafico saúde iluminação",
+                        backgroundColor: 'rgb(99, 132, 255)',
+                        borderColor: 'rgb(75, 100, 200)',
+                        data: resultado.map(r => +r.nota),
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 1,
+                                max: +resultado[0].total
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    });
+}
 
 document.getElementById('gerar-nota').addEventListener('click', atualizarNotaIluminacao);
 document.getElementById('gerar-lista-postes').addEventListener('click', atualizarTabelaPostes);
 document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
+document.getElementById('gerar-grafico').addEventListener('click', atualizarGraficoSaudeIluminacao);
 
 

@@ -77,12 +77,36 @@ server.get('/saude-iluminacao', (request, response) => {
 
 //rota lista postes
 server.get('/postes', (request, response) => {
-
     db.listaPostes((error, postes) => {
         if (error) {
             response.status(500).send();
         } else {
             response.send(postes);
+        }
+    });
+});
+
+//rota relatório saúde iluminção
+server.get('/relatorio-saude-iluminacao', (request, response) => {
+    const inicialMes = +request.query['inicial-mes'];
+    const inicialAno = +request.query['inicial-ano'];
+    const finalMes = +request.query['final-mes'];
+    const finalAno = +request.query['final-ano'];
+
+    const inicial = {
+        mes: inicialMes,
+        ano: inicialAno
+    };
+    const final = {
+        mes: finalMes,
+        ano: finalAno
+    };
+
+    db.relatorioSaudeIluminacao({inicial, final}, (erro, relatorio) => {
+        if (erro) {
+            response.status(500).send();
+        } else {
+            response.send(relatorio);
         }
     });
 });

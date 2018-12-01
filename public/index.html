@@ -7,6 +7,7 @@
     <title>Magnani Inspections</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 </head>
 
 <body>
@@ -127,6 +128,20 @@
             </tbody>
         </table>
         <button type="button" id="gerar-lista-postes">Gerar lista</button>
+    </fieldset>
+    <fieldset>
+        <label for="mes-ano-inicial">Mês/Ano Inicial</label>
+        <input type="month" id="mes-ano-inicial" name="mes-ano-inicial" value="2018-03">
+
+        <label for="mes-ano-final">Mês/Ano final</label>
+        <input type="month" id="mes-ano-final" name="mes-ano-final" value="2018-09">
+
+        <button id="gerar-grafico" type="button">Gerar Gráfico</button>
+
+        <div style="width: 600px">
+            <canvas id="myChart" height="320"></canvas>
+        </div>
+
     </fieldset>
     <script src="main.js"></script>
 </body>
