@@ -50,7 +50,7 @@
             <br/>
 
             <label for="data">Data</label>
-            <input type="date" name="data">
+            <input type="date"  id="inspecdata" name="data">
             <br/>
 
             <label for="poste-etiqueta">Etiqueta do poste:</label>
@@ -101,6 +101,32 @@
         <input type="text" disabled="disabled" name="nota-saude" id="nota-saude">
 
         <button type="button" id="gerar-nota">Verificar Nota</button>
+    </fieldset>
+    <fieldset>
+        <legend>Lista de postes</legend>
+        <label>Lista de postes</label>
+        <table id="lista-postes" border="1">
+            <thead>
+                <tr>
+                    <th>
+                        Etiqueta
+                    </th>
+                    <th>
+                        Material
+                    </th>
+                    <th>
+                        Latitude
+                    </th>
+                    <th>
+                        Longitude
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button type="button" id="gerar-lista-postes">Gerar lista</button>
     </fieldset>
     <script src="main.js"></script>
 </body>

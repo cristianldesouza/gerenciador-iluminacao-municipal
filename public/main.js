@@ -51,6 +51,21 @@ function postesNaoInspecionados({dataInicial, dataFinal}, complete) {
     .catch(complete);
 }
 
+function listaPostes (complete) {
+    fetch(`${serverURL}/postes`)
+    .then((response) => {
+        if (response.status === 500) {
+            complete('não foi possível gerar a lista');
+        } else {
+            return response.json()
+                .then((body) => {
+                    complete(undefined, body);
+                });
+        }
+    })
+    .catch(complete);
+}
+
 function notaIluminacao ({mes, ano}, complete) {
     fetch(`${serverURL}/saude-iluminacao?mes=${mes}&ano=${ano}`)
     .then((response) => {
@@ -94,26 +109,18 @@ document.getElementById('cadastro-poste').addEventListener('submit', (event) => 
 document.getElementById('cadastro-inspecao').addEventListener('submit', (event) => {
     event.preventDefault();
 
-    // ID serial,
-    // estado_conservacao boolean,
-    // prumo boolean,
-    // condicao_fiacao boolean,
-    // data date,
-    // poste_etiqueta char(5),
-    // primary key (ID)
-
     const form = event.target;
     const estadoConservacao = JSON.parse(form.querySelector('[name="estado-conservacao"]:checked').value);
     const prumo = JSON.parse(form.querySelector('[name="prumo"]:checked').value);
     const condicaoFiacao = JSON.parse(form.querySelector('[name="condicao-fiacao"]:checked').value);
-    const data = new Date(form.querySelector('[name="data"]').value);
+    const data = form.querySelector('[name="data"]').value;
     const posteEtiqueta = form.querySelector('[name="poste-etiqueta"]').value;
 
     const inspecao = {
         estadoConservacao,
         prumo,
         condicaoFiacao,
-        data: `${data.getFullYear()}-${data.getMonth()}-${data.getDate()}`,
+        data,
         posteEtiqueta
     };
 
@@ -170,7 +177,50 @@ function atualizarTabelaPostesNaoInspecionados() {
 
 };
 
-document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
+function atualizarTabelaPostes(){
+    const tabela = document.getElementById('lista-postes');
+    const tbody = tabela.getElementsByTagName('tbody')[0];
+
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild)
+    }
+
+    listaPostes((erro, postes) => {
+        if (erro) {
+            alert('Não foi dessa vez');
+        }else {
+            alert('acertou, mizeravi');
+
+            for(let i = 0; i < postes.length; i++) {
+                const poste = postes[i];
+                const row = document.createElement('tr');
+                const etiqueta = document.createElement('td');
+                const material = document.createElement('td');
+                const latitude = document.createElement('td');
+                const longitude = document.createElement('td');
+
+                switch (poste.material) {
+                    case 'F': material.innerHTML = 'Ferro'; break;
+                    case 'M': material.innerHTML = 'Madeira'; break;
+                    case 'C': material.innerHTML = 'Concreto'; break;
+                }
+                etiqueta.innerHTML = poste.etiqueta;
+                latitude.innerHTML= poste.latitude;
+                longitude.innerHTML = poste.longitude;
+
+                row.appendChild(etiqueta);
+                row.appendChild(material);
+                row.appendChild(latitude);
+                row.appendChild(longitude);
+
+                tbody.appendChild(row);
+            }
+        }
+    });
+
+
+}
+
 
 function atualizarNotaIluminacao () {
     const inputNota = document.getElementById('nota-saude');
@@ -189,5 +239,7 @@ function atualizarNotaIluminacao () {
 };
 
 document.getElementById('gerar-nota').addEventListener('click', atualizarNotaIluminacao);
+document.getElementById('gerar-lista-postes').addEventListener('click', atualizarTabelaPostes);
+document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
 
 

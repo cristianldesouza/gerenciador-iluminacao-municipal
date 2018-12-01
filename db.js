@@ -17,7 +17,6 @@ exports.inserirPoste = function inserirPoste({etiqueta, material, latitude, long
     //interpolação de string -- 
     const sql = `INSERT INTO poste (etiqueta, material, latitude, longitude) 
                  VALUES ('${etiqueta}', '${material}', ${latitude}, ${longitude})`;
-    console.log(sql)
     pool.connect((error, client, done) => {
         if(error) {
             console.error("Não foi possível conectar ao banco " + error);
@@ -120,7 +119,7 @@ exports.postesNaoInspecionados = function postesNaoInspecionados({dataInicial, d
 
 //select relatório 2
 exports.saudeMensalIluminacao = function saudeMensalIluminacao({mes, ano}, complete) {
-    const sql = `SELECT sum(pontuacao) as nota, sum(total) as total 
+    const sql = `SELECT coalesce(sum(pontuacao), 0) as nota, coalesce(sum(total), 0) as total
                  FROM (
                      (
                      SELECT sum(case when estado_conservacao then 1 else 0 end) +
@@ -137,9 +136,9 @@ exports.saudeMensalIluminacao = function saudeMensalIluminacao({mes, ano}, compl
                      SELECT 3 as pontuacao, 3 as total
                      FROM poste
                      LEFT JOIN inspecao ON inspecao.poste_etiqueta = poste.etiqueta
-                     AND NOT(EXTRACT (MONTH FROM inspecao.data) = ${mes}
+                     AND (EXTRACT (MONTH FROM inspecao.data) = ${mes}
                      AND EXTRACT  (YEAR FROM inspecao.data) = ${ano})
-                     GROUP BY inspecao.poste_etiqueta
+                     WHERE inspecao.id is null
                      )
                  ) as T`;
 
@@ -163,9 +162,29 @@ exports.saudeMensalIluminacao = function saudeMensalIluminacao({mes, ano}, compl
     });
 
 };
-exports.saudeMensalIluminacao({mes: 10, ano: 2018}, (erro) => {
-    console.log(erro);
-});
+
+exports.listaPostes = function listaPostes(complete) {
+    const sql = `SELECT * FROM poste ORDER BY etiqueta`;
+
+    pool.connect((error, client, done) => {
+        if(error) {
+            console.error("Não foi possível conectar ao banco " + error);
+            complete(error);
+        }else {
+            client.query(sql, (error, result) => {
+                let postes;
+                if (error) {
+                    console.error("Não foi possível consultar o banco " + error);
+                }else {
+                    postes = result.rows;
+                }
+                done();
+                complete(error, postes);
+
+            });
+        }  
+    });
+}
 
 
 

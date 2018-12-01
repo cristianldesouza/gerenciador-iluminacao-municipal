@@ -75,6 +75,18 @@ server.get('/saude-iluminacao', (request, response) => {
     });
 });
 
+//rota lista postes
+server.get('/postes', (request, response) => {
+
+    db.listaPostes((error, postes) => {
+        if (error) {
+            response.status(500).send();
+        } else {
+            response.send(postes);
+        }
+    });
+});
+
 //porta de conexão --
 server.listen('8080', () => {
     console.log("Servidor rodando!")
