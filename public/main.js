@@ -204,21 +204,25 @@ function atualizarTabelaPostes() {
                 const material = document.createElement('td');
                 const latitude = document.createElement('td');
                 const longitude = document.createElement('td');
-
+                
+                // na resposta do banco, o material do poste vem como "F, M ou C", este valo é alterado para ferro madeira ou concreto --
                 switch (poste.material) {
                     case 'F': material.innerHTML = 'Ferro'; break;
                     case 'M': material.innerHTML = 'Madeira'; break;
                     case 'C': material.innerHTML = 'Concreto'; break;
                 }
+                // coloca o valor do objeto json da resposta do servidor dentro de uma td --
                 etiqueta.innerHTML = poste.etiqueta;
                 latitude.innerHTML = poste.latitude;
                 longitude.innerHTML = poste.longitude;
 
+                // adiciona as td's criadas na linha atual --
                 row.appendChild(etiqueta);
                 row.appendChild(material);
                 row.appendChild(latitude);
                 row.appendChild(longitude);
 
+                // adiciona a linha ao corpo da tabela --
                 tbody.appendChild(row);
             }
         }
@@ -227,22 +231,27 @@ function atualizarTabelaPostes() {
 
 }
 
-// função que atualiza a tabela de postes não inspecionados quando uma requisição é feita
+// função que atualiza a tabela de postes não inspecionados quando uma requisição é feita --
 function atualizarTabelaPostesNaoInspecionados() {
+    // elementos da tabela são inseridos em variáveis --
     const tabela = document.getElementById('postes-nao-inspecionados');
     const tbody = tabela.getElementsByTagName('tbody')[0];
+    // valores das datas, inicial e final são colocados em variáveis para a chamada da função que faz requisição pro servidor --
     const dataInicial = document.getElementById('data-inicial').value;
     const dataFinal = document.getElementById('data-final').value;
 
+    // limpa a tabela para que a ultima chamada seja a única apresentada --
     while (tbody.firstChild) {
         tbody.removeChild(tbody.firstChild);
     }
+
+    // chamada da função que faz a requisição pro servidor, para obter os postes não inspecionados --
     postesNaoInspecionados({ dataInicial, dataFinal }, (erro, postes) => {
         if (erro) {
             alert('não foi dessa vez');
         } else {
             alert('acertou, mizeravi');
-
+            // caso haja resposta do servidor, cria a tabela com a resposta --
             for (let i = 0; i < postes.length; i++) {
                 const poste = postes[i];
                 const row = document.createElement('tr');
@@ -250,21 +259,26 @@ function atualizarTabelaPostesNaoInspecionados() {
                 const material = document.createElement('td');
                 const latitude = document.createElement('td');
                 const longitude = document.createElement('td');
-
+                
+                // na resposta do banco, o material do poste vem como "F, M ou C", este valo é alterado para ferro madeira ou concreto --
                 switch (poste.material) {
                     case 'F': material.innerHTML = 'Ferro'; break;
                     case 'M': material.innerHTML = 'Madeira'; break;
                     case 'C': material.innerHTML = 'Concreto'; break;
                 }
+
+                // valor do objeto obtido como resposta é atribuido aos td's --
                 etiqueta.innerHTML = poste.etiqueta;
                 latitude.innerHTML = poste.latitude;
                 longitude.innerHTML = poste.longitude;
 
+                // td's são inseridos a tr --
                 row.appendChild(etiqueta);
                 row.appendChild(material);
                 row.appendChild(latitude);
                 row.appendChild(longitude);
 
+                // tr é adicionada a tbody --
                 tbody.appendChild(row);
             }
         }
@@ -273,23 +287,29 @@ function atualizarTabelaPostesNaoInspecionados() {
 }
 
 
+// função que chama a requisição e mostra no cliente o relatório 2 --
 function atualizarNotaIluminacao() {
+    //os campos onde a nota será colocada e dos dados do relatório são colocados en variáveis --
     const inputNota = document.getElementById('nota-saude');
     const mesAno = document.getElementById('mes-ano').value;
     const ano = mesAno.split('-')[0];
     const mes = mesAno.split('-')[1];
 
+    // a função que faz a requisição ao servidor é chamada --
     notaIluminacao({ mes, ano }, (erro, response) => {
         if (erro) {
             alert("Não foi dessa vez");
         } else {
+            // caso a requisição seja feita com sucesso, atribui a resposta do servidor ao input de resposta --
             inputNota.value = `${response.nota}/${response.total}`;
         }
     });
 
 }
 
+// função que faz a chamada e mostra o gráfico no cliente --
 function atualizarGraficoSaudeIluminacao() {
+    // elementos necessários para gerar o gráfico são atribuidos em variáveis --
     const inicialAnoMes = document.getElementById('mes-ano-inicial').value;
     const finalAnoMes = document.getElementById('mes-ano-final').value;
     const mesInicial = inicialAnoMes.split('-')[1];
@@ -297,21 +317,27 @@ function atualizarGraficoSaudeIluminacao() {
     const mesFinal = finalAnoMes.split('-')[1];
     const anoFinal = finalAnoMes.split('-')[0];
 
+    // mes e ano inicial são colocados em um objeto para serem enviados na requisição --
     const inicial = {
+        // o + é colocado antes da variável para transformar uma string em um numero
         mes: +mesInicial,
         ano: +anoInicial
     }
 
+    // mes e ano final são colocados em um objeto para serem enviados na requisição --
     const final = {
+        // o + é colocado antes da variável para transformar uma string em um número --
         mes: +mesFinal,
         ano: +anoFinal
     }
 
+    // função que faz a requisição é chamada --
     relatorioSaudeIluminacao({ inicial, final }, (erro, resultado) => {
-        console.log(resultado);
         if (erro) {
             alert('Não foi dessa vez');
-        } else {
+        } // caso a requisição seja feita com sucesso, o gráfico é criado com a biblioteca Chart.js --
+         else {
+            // na resposta do servidor, os meses são números, foi criado um array para atribuir o nome do mês a seu número correspondente --
             const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             const labels = [];
             let mesAtual = inicial.mes;
@@ -352,6 +378,7 @@ function atualizarGraficoSaudeIluminacao() {
     });
 }
 
+// os eventos que chamam as funções que fazem as requisições ao servidor são atribuidos aos botões --
 document.getElementById('gerar-nota').addEventListener('click', atualizarNotaIluminacao);
 document.getElementById('gerar-lista-postes').addEventListener('click', atualizarTabelaPostes);
 document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
