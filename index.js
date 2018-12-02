@@ -1,11 +1,13 @@
 //importa biblioteca express --
 const express = require('express');
-//importa biblioteca local --
+
+//importa biblioteca local "db" --
 const db = require('./db');
 
+//atribui o express na variável server --
 const server = express();
 
-//permite o uso de json no express -- 
+//permite o uso de json no servidor -- 
 server.use(express.json());
 
 //servir arquivo estático --
@@ -25,9 +27,13 @@ server.post('/inserir-poste', (request, response) => {
 
 //rota de inserção da inspeção --
 server.post('/inserir-inspecao', (request, response) => {
+    //atribui o objeto da inspeção em uma variavel
     const inspecao = request.body;
+    //separa a data da inspeção em mês e ano
     const mes = inspecao.data.split('-')[1];
     const ano = inspecao.data.split('-')[0];
+
+    
     db.posteTemInspecaoNoMes({etiqueta: inspecao.posteEtiqueta, mes, ano}, (erro, resultado) => {
         if (erro) {
             response.status(500).send();

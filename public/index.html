@@ -63,6 +63,33 @@
     </fieldset>
 
     <fieldset>
+        <legend>Lista de postes</legend>
+        <label>Lista de postes</label>
+        <table id="lista-postes" border="1">
+            <thead>
+                <tr>
+                    <th>
+                        Etiqueta
+                    </th>
+                    <th>
+                        Material
+                    </th>
+                    <th>
+                        Latitude
+                    </th>
+                    <th>
+                        Longitude
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <button type="button" id="gerar-lista-postes">Gerar lista</button>
+    </fieldset>
+
+    <fieldset>
         <legend>Postes Não Inspecionados</legend>
         <label for="data-inicial">Data Inicial</label>
         <input type="date" name="data-inicial" id="data-inicial">
@@ -104,42 +131,16 @@
         <button type="button" id="gerar-nota">Verificar Nota</button>
     </fieldset>
     <fieldset>
-        <legend>Lista de postes</legend>
-        <label>Lista de postes</label>
-        <table id="lista-postes" border="1">
-            <thead>
-                <tr>
-                    <th>
-                        Etiqueta
-                    </th>
-                    <th>
-                        Material
-                    </th>
-                    <th>
-                        Latitude
-                    </th>
-                    <th>
-                        Longitude
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <button type="button" id="gerar-lista-postes">Gerar lista</button>
-    </fieldset>
-    <fieldset>
         <label for="mes-ano-inicial">Mês/Ano Inicial</label>
-        <input type="month" id="mes-ano-inicial" name="mes-ano-inicial" value="2018-03">
+        <input type="month" id="mes-ano-inicial" name="mes-ano-inicial">
 
         <label for="mes-ano-final">Mês/Ano final</label>
-        <input type="month" id="mes-ano-final" name="mes-ano-final" value="2018-09">
+        <input type="month" id="mes-ano-final" name="mes-ano-final">
 
         <button id="gerar-grafico" type="button">Gerar Gráfico</button>
 
-        <div style="width: 600px">
-            <canvas id="myChart" height="320"></canvas>
+        <div style="">
+            <canvas id="myChart" height="300"></canvas>
         </div>
 
     </fieldset>
