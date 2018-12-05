@@ -484,6 +484,7 @@ document.getElementById('botao-grafico').addEventListener('click', (event) => {
 document.getElementById('home').addEventListener('click', (event) => {
     event.preventDefault();
     removeActiveBotoes();
+    desativaTodasTelas();
     telaCadastroPoste.style.display = 'block';
     botaoCadastroPoste.classList.add("active");
 });
