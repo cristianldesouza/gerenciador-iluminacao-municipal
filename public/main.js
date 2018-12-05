@@ -260,7 +260,6 @@ function atualizarTabelaPostesNaoInspecionados() {
         if (erro) {
             console.log('Não foi possível buscar os postes não inspecionados');
         } else {
-            alert('acertou, mizeravi');
             // caso haja resposta do servidor, cria a tabela com a resposta --
             for (let i = 0; i < postes.length; i++) {
                 const poste = postes[i];
