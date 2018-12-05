@@ -38,6 +38,12 @@
 
     <div class="container">
         <div class="border border-primary p-3 mx-auto tela" id="tela-cadastro-poste">
+        <div class="alert alert-danger alerta"  id="erro-inserir-poste" role="alert">
+                O poste não pôde ser inserido! Verifique os dados.
+        </div>
+            <div class="alert alert-success alerta" id="sucesso-inserir-poste"  role="alert">
+                    O poste inserido com sucesso!
+            </div>
             <h3 class="text-center">Cadastro de postes</h3>
             <br>
             <form id="cadastro-poste">
@@ -62,22 +68,28 @@
         </div>
 
         <div class="border border-primary p-3 tela" style="display: none;" id="tela-cadastro-inspecao">
+            <div class="alert alert-danger alerta"  id="erro-inserir-inspecao" role="alert">
+                    A inspeção não pôde ser inserida! Verifique os dados.
+            </div>
+            <div class="alert alert-success alerta" id="sucesso-inserir-inspecao"  role="alert">
+                    Inspeção inserida com sucesso!
+            </div>
             <h3 class="text-center">Cadastro de inspeção</h3>
             <br>
             <form id="cadastro-inspecao">
                 <label for="estado-conservacao">Estado de conservação: </label><br>
-                <input type="radio" name="estado-conservacao" value="true">Adequado
-                <input type="radio" name="estado-conservacao" value="false">Não adequado
+                <input type="radio" name="estado-conservacao" value="true" id="ctrue" checked> <label for="ctrue">Adequado</label> 
+                <input type="radio" name="estado-conservacao" value="false" id="cfalse"> <label for="cfalse">Não adequado</label>
                 <br /><br>
 
                 <label for="prumo">Prumo: </label><br>
-                <input type="radio" name="prumo" value="true">Adequado
-                <input type="radio" name="prumo" value="false">Não adequado
+                <input type="radio" name="prumo" value="true" id="ptrue" checked> <label for="ptrue">Adequado</label> 
+                <input type="radio" name="prumo" value="false" id="pfalse"> <label for="pfalse">Não adequado</label>
                 <br /><br>
 
                 <label for="condicao-fiacao">Condição fiação: </label><br>
-                <input type="radio" name="condicao-fiacao" value="true">Adequado
-                <input type="radio" name="condicao-fiacao" value="false">Não adequado
+                <input type="radio" name="condicao-fiacao" value="true" id="cotrue" checked> <label for="cotrue">Adequado</label> 
+                <input type="radio" name="condicao-fiacao" value="false" id="cofalse"> <label for="cofalse">Não adequado</label>
                 <br /><br>
 
                 <div class="row">

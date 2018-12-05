@@ -128,6 +128,10 @@ document.getElementById('cadastro-poste').addEventListener('submit', (event) => 
     const latitude = form.querySelector('[name="latitude"]').value;
     const longitude = form.querySelector('[name="longitude"]').value;
 
+    //alerta de aviso
+    const alertaSucesso = document.getElementById('sucesso-inserir-poste');
+    const alertaErro = document.getElementById('erro-inserir-poste');
+
     // informações do post guardadas em um objeto
     const poste = {
         etiqueta,
@@ -140,9 +144,11 @@ document.getElementById('cadastro-poste').addEventListener('submit', (event) => 
     inserirPoste(poste, (error) => {
         // a função inserir poste retorna a resposta do servidor, caso haja erro, ele é tratado, caso a requisição seja feita com sucesso, retorna um aviso --
         if (error) {
-            alert('num foi dessa vez');
+            removeAlertas();
+            alertaErro.style.display = 'block';
         } else {
-            alert('acerto mizeravi');
+            removeAlertas();
+            alertaSucesso.style.display = 'block';
         }
     });
 });
@@ -159,6 +165,10 @@ document.getElementById('cadastro-inspecao').addEventListener('submit', (event) 
     const data = form.querySelector('[name="data"]').value;
     const posteEtiqueta = form.querySelector('[name="poste-etiqueta"]').value;
 
+    //alerta de aviso
+    const alertaSucesso = document.getElementById('sucesso-inserir-inspecao');
+    const alertaErro = document.getElementById('erro-inserir-inspecao');
+
     // itens da inspeção são colocados em um objeto --
     const inspecao = {
         estadoConservacao,
@@ -171,9 +181,11 @@ document.getElementById('cadastro-inspecao').addEventListener('submit', (event) 
     // a função inserirInspecao() é chamada para fazer a requisição ao servidor --
     inserirInspecao(inspecao, (error) => {
         if (error) {
-            alert('num foi dessa vez');
+            removeAlertas();
+            alertaErro.style.display = 'block';
         } else {
-            alert('acerto mizeravi');
+            removeAlertas();
+            alertaSucesso.style.display = 'block';
         }
     });
 });
@@ -192,7 +204,7 @@ function atualizarTabelaPostes() {
     //chama a função que faz a requisição para o servidor --
     listaPostes((erro, postes) => {
         if (erro) {
-            alert('Não foi dessa vez');
+            console.log('Não foi possível gerar a lista de postes');
         } else {
             // caso a requisição seja concluida com suceso, cria a tabela com o objeto poste obtido --
             for (let i = 0; i < postes.length; i++) {
@@ -246,7 +258,7 @@ function atualizarTabelaPostesNaoInspecionados() {
     // chamada da função que faz a requisição pro servidor, para obter os postes não inspecionados --
     postesNaoInspecionados({ dataInicial, dataFinal }, (erro, postes) => {
         if (erro) {
-            alert('não foi dessa vez');
+            console.log('Não foi possível buscar os postes não inspecionados');
         } else {
             alert('acertou, mizeravi');
             // caso haja resposta do servidor, cria a tabela com a resposta --
@@ -296,7 +308,7 @@ function atualizarNotaIluminacao() {
     // a função que faz a requisição ao servidor é chamada --
     notaIluminacao({ mes, ano }, (erro, response) => {
         if (erro) {
-            alert("Não foi dessa vez");
+            console.log('Não foi possível gerar a nota da iluminação');
         } else {
             // caso a requisição seja feita com sucesso, atribui a resposta do servidor ao input de resposta --
             inputNota.value = `${response.nota}/${response.total}`;
@@ -332,7 +344,7 @@ function atualizarGraficoSaudeIluminacao() {
     // função que faz a requisição é chamada --
     relatorioSaudeIluminacao({ inicial, final }, (erro, resultado) => {
         if (erro) {
-            alert('Não foi dessa vez');
+            console.log('Não foi possível gerar o gráfico');
         } // caso a requisição seja feita com sucesso, o gráfico é criado com a biblioteca Chart.js --
         else {
             // na resposta do servidor, os meses são números, foi criado um array para atribuir o nome do mês a seu número correspondente --
@@ -399,11 +411,19 @@ const botaoPostesNaoInspecionados = document.getElementById('botao-postes-nao-in
 const botaoSaudeDaIluminacaoPublica = document.getElementById('botao-saude-iluminacao-publica');
 const botaoGrafico = document.getElementById('botao-grafico');
 const todosOsBotoes = document.getElementsByTagName('a');
+const alertas = document.getElementsByClassName('alerta');
 
 //remove o active dos botões --
 function removeActiveBotoes() {
     for (let i = 0; i < todosOsBotoes.length; i++) {
         todosOsBotoes[i].classList.remove("active");
+    };
+}
+
+//remove os alertas --
+function removeAlertas() {
+    for (let i = 0; i < alertas.length; i++) {
+        alertas[i].style.display = 'none';
     };
 }
 
@@ -420,6 +440,7 @@ document.getElementById('botao-cadastro-postes').addEventListener('click', (even
     event.preventDefault();
     removeActiveBotoes();
     desativaTodasTelas();
+    removeAlertas();
     telaCadastroPoste.style.display = 'block';
     botaoCadastroPoste.classList.add("active");
 });
@@ -427,6 +448,7 @@ document.getElementById('botao-cadastro-inspecao').addEventListener('click', (ev
     event.preventDefault();
     removeActiveBotoes();
     desativaTodasTelas();
+    removeAlertas();
     telaCadastroInspecao.style.display = 'block';
     botaoCadastroInspecao.classList.add("active");
 });
