@@ -8,143 +8,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
 </head>
 
 <body>
-    <fieldset>
-        <legend>Cadastro de postes</legend>
-        <form id="cadastro-poste">
-            <label for="etiqueta">Etiqueta:</label>
-            <input type="text" name="etiqueta"/><br>
+    <nav class="navbar navbar-dark navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <a class="navbar-brand" href="#" id="home">INSPECTIONS</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#tela-cadastro-poste" id="botao-cadastro-postes">Cadastro de Postes<span
+                        class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#tela-cadastro-inspecao" id="botao-cadastro-inspecao">Cadastro de Inspeção</a>
+                <a class="nav-link" href="#tela-lista-postes" id="botao-lista-postes">Lista de Postes</a>
+                <a class="nav-link" href="#tela-postes-nao-inspecionados" id="botao-postes-nao-inspecionados">Postes
+                    Não Inspecionados</a>
+                <a class="nav-link" href="#tela-saude-da-iluminacao-publica" id="botao-saude-iluminacao-publica">Saúde
+                    da Iluminação Pública</a>
+                <a class="nav-link" href="#tela-grafico" id="botao-grafico">Gráfico Saúde da Iluminação Pública</a>
+            </div>
+        </div>
+    </nav>
 
-            <label for="material">Material:</label>
-            <input type="radio" name="material" value="F" checked>Ferro
-            <input type="radio" name="material" value="M">Madeira
-            <input type="radio" name="material" value="C">Concreto<br />
+    <div class="container">
+        <div class="border border-primary p-3 mx-auto tela" id="tela-cadastro-poste">
+            <h3 class="text-center">Cadastro de postes</h3>
+            <br>
+            <form id="cadastro-poste">
+                <label for="etiqueta">Etiqueta: </label>
+                <input class="form-control" type="text" name="etiqueta" placeholder="Digite a Etiqueta" /><br>
 
-            <label for="latitude">Latitude:</label>
-            <input type="text" name="latitude"> <br>
+                <label for="material">Material: </label>
+                <br>
+                <input type="radio" name="material" value="F" id="ferro" checked><label for="ferro">Ferro</label>
+                <input type="radio" name="material" id="madeira" value="M"><label for="madeira">Madeira</label>
+                <input type="radio" name="material" id="concreto" value="C"> <label for="concreto">Concreto</label> <br />
+                <br>
 
-            <label for="longitude">Longitude:</label>
-            <input type="text" name="longitude"><br>
+                <label for="latitude">Latitude:</label>
+                <input type="text" class="form-control" name="latitude"> <br>
 
-            <button type="submit">Adicionar poste</button>
-        </form>
-    </fieldset>
+                <label for="longitude">Longitude:</label>
+                <input type="text" class="form-control" name="longitude"><br>
 
-    <fieldset>
-        <legend>Cadastro de inspeção</legend>
-        <form id="cadastro-inspecao">
-            <label for="estado-conservacao">Estado de conservação</label>
-            <input type="radio" name="estado-conservacao" value="true">Adequado
-            <input type="radio" name="estado-conservacao" value="false">Não adequado
-            <br/>
-
-            <label for="prumo">Prumo</label>
-            <input type="radio" name="prumo" value="true">Adequado
-            <input type="radio" name="prumo" value="false">Não adequado
-            <br/>
-
-            <label for="condicao-fiacao">Condição fiação</label>
-            <input type="radio" name="condicao-fiacao" value="true">Adequado
-            <input type="radio" name="condicao-fiacao" value="false">Não adequado
-            <br/>
-
-            <label for="data">Data</label>
-            <input type="date"  id="inspecdata" name="data">
-            <br/>
-
-            <label for="poste-etiqueta">Etiqueta do poste:</label>
-            <input type="text" name="poste-etiqueta"/>
-            <br/>
-
-            <button type="submit">Adicionar inspeção</button>
-        </form>
-    </fieldset>
-
-    <fieldset>
-        <legend>Lista de postes</legend>
-        <label>Lista de postes</label>
-        <table id="lista-postes" border="1">
-            <thead>
-                <tr>
-                    <th>
-                        Etiqueta
-                    </th>
-                    <th>
-                        Material
-                    </th>
-                    <th>
-                        Latitude
-                    </th>
-                    <th>
-                        Longitude
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <button type="button" id="gerar-lista-postes">Gerar lista</button>
-    </fieldset>
-
-    <fieldset>
-        <legend>Postes Não Inspecionados</legend>
-        <label for="data-inicial">Data Inicial</label>
-        <input type="date" name="data-inicial" id="data-inicial">
-
-        <label for="data-final">Data Final</label>
-        <input type="date" name="data-final" id="data-final">
-
-        <table id="postes-nao-inspecionados" border="1">
-            <thead>
-                <tr>
-                    <th>
-                        Etiqueta
-                    </th>
-                    <th>
-                        Material
-                    </th>
-                    <th>
-                        Latitude
-                    </th>
-                    <th>
-                        Longitude
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <button type="button" id="atualizar-postes-nao-inspecionados">Gerar Relatório Postes Não Inspecionados</button>
-    </fieldset>
-    <fieldset>
-        <legend>Saúde da Iluminação Pública</legend>
-        <label for="mes-ano">Mês e Ano desejado</label>
-        <input type="month" id="mes-ano" name="mes-ano">
-
-        <label for="nota-saude">Nota da Iluminação Pública do Mês Desejado:</label>
-        <input type="text" disabled="disabled" name="nota-saude" id="nota-saude">
-
-        <button type="button" id="gerar-nota">Verificar Nota</button>
-    </fieldset>
-    <fieldset>
-        <label for="mes-ano-inicial">Mês/Ano Inicial</label>
-        <input type="month" id="mes-ano-inicial" name="mes-ano-inicial">
-
-        <label for="mes-ano-final">Mês/Ano final</label>
-        <input type="month" id="mes-ano-final" name="mes-ano-final">
-
-        <button id="gerar-grafico" type="button">Gerar Gráfico</button>
-
-        <div style="">
-            <canvas id="myChart" height="300"></canvas>
+                <button class="btn btn-primary" type="submit">Adicionar poste</button>
+            </form>
         </div>
 
-    </fieldset>
+        <div class="border border-primary p-3 tela" style="display: none;" id="tela-cadastro-inspecao">
+            <h3 class="text-center">Cadastro de inspeção</h3>
+            <br>
+            <form id="cadastro-inspecao">
+                <label for="estado-conservacao">Estado de conservação: </label><br>
+                <input type="radio" name="estado-conservacao" value="true">Adequado
+                <input type="radio" name="estado-conservacao" value="false">Não adequado
+                <br /><br>
+
+                <label for="prumo">Prumo: </label><br>
+                <input type="radio" name="prumo" value="true">Adequado
+                <input type="radio" name="prumo" value="false">Não adequado
+                <br /><br>
+
+                <label for="condicao-fiacao">Condição fiação: </label><br>
+                <input type="radio" name="condicao-fiacao" value="true">Adequado
+                <input type="radio" name="condicao-fiacao" value="false">Não adequado
+                <br /><br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="data">Data: </label><br>
+                        <input class="form-control" type="date" id="inspecdata" name="data">
+                    </div>
+                    <div class="col">
+                        <label for="poste-etiqueta">Etiqueta do poste:</label><br>
+                        <input class="form-control" type="text" name="poste-etiqueta" />
+                        <br>
+                    </div>
+
+                </div>
+
+                <button class="btn btn-primary" type="submit">Adicionar inspeção</button>
+            </form>
+        </div>
+
+        <div class="border border-primary p-3 tela" id="tela-lista-postes" style="display: none;">
+            <h3 class="text-center">Lista de Postes</h3>
+            <br>
+            <table class="table" id="lista-postes" border="1">
+                <thead>
+                    <tr>
+                        <th>
+                            Etiqueta
+                        </th>
+                        <th>
+                            Material
+                        </th>
+                        <th>
+                            Latitude
+                        </th>
+                        <th>
+                            Longitude
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="border border-primary p-3 tela" id="tela-postes-nao-inspecionados" style="display: none;">
+            <h3 class="text-center">Postes Não Inspecionados</h3>
+            <br>
+            <label for="data-inicial">Data Inicial</label>
+            <input class="form-control" type="date" name="data-inicial" id="data-inicial">
+            <br><br>
+
+            <label for="data-final">Data Final</label>
+            <input class="form-control" type="date" name="data-final" id="data-final">
+            <br><br>
+
+            <table class="table" id="postes-nao-inspecionados" border="1">
+                <thead>
+                    <tr>
+                        <th>
+                            Etiqueta
+                        </th>
+                        <th>
+                            Material
+                        </th>
+                        <th>
+                            Latitude
+                        </th>
+                        <th>
+                            Longitude
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <button class="btn btn-primary" type="button" id="atualizar-postes-nao-inspecionados">Gerar Relatório
+                Postes Não Inspecionados</button>
+        </div>
+        <div class="border border-primary p-3 tela" id="tela-saude-da-iluminacao-publica" style="display: none;">
+            <div>
+                <h3 class="text-center">Saúde da Iluminação Pública</h3>
+                <br>
+                <label for="mes-ano">Mês e Ano desejado</label>
+                <input class="form-control" type="month" id="mes-ano" name="mes-ano">
+                <br>
+                <label for="nota-saude">Nota da Iluminação Pública do Mês Desejado:</label>
+                <input class="form-control" type="text" disabled="disabled" name="nota-saude" id="nota-saude">
+                <br>
+                <button class="btn btn-primary" type="button" id="gerar-nota">Verificar Nota</button>
+            </div>
+            <hr>
+        </div>
+        <div class="border border-primary p-3 tela" id="tela-grafico" style="display: none;">
+            <label for="mes-ano-inicial">Mês/Ano Inicial</label>
+            <input class="form-control" type="month" id="mes-ano-inicial" name="mes-ano-inicial">
+
+            <label for="mes-ano-final">Mês/Ano final</label>
+            <input class="form-control" type="month" id="mes-ano-final" name="mes-ano-final">
+            <br>
+            <button class="btn btn-primary" id="gerar-grafico" type="button">Gerar Gráfico</button>
+
+            <div style="">
+                <canvas id="myChart" height="300"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
     <script src="main.js"></script>
+
 </body>
 
 </html>

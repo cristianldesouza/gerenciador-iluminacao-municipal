@@ -11,8 +11,8 @@ function inserirPoste(poste, complete) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(poste)
     })
-    //a resposta da requisição é tratada no then(), caso o status da resposta seja 500, a função complete() retorna pro cliente 
-    //o erro do servidor, caso nao haja erro, copleta a ação --
+        //a resposta da requisição é tratada no then(), caso o status da resposta seja 500, a função complete() retorna pro cliente 
+        //o erro do servidor, caso nao haja erro, copleta a ação --
         .then((response) => {
             if (response.status === 500) {
                 complete('não foi possível inserir o poste');
@@ -194,8 +194,6 @@ function atualizarTabelaPostes() {
         if (erro) {
             alert('Não foi dessa vez');
         } else {
-            alert('acertou, mizeravi');
-
             // caso a requisição seja concluida com suceso, cria a tabela com o objeto poste obtido --
             for (let i = 0; i < postes.length; i++) {
                 const poste = postes[i];
@@ -204,7 +202,7 @@ function atualizarTabelaPostes() {
                 const material = document.createElement('td');
                 const latitude = document.createElement('td');
                 const longitude = document.createElement('td');
-                
+
                 // na resposta do banco, o material do poste vem como "F, M ou C", este valo é alterado para ferro madeira ou concreto --
                 switch (poste.material) {
                     case 'F': material.innerHTML = 'Ferro'; break;
@@ -259,7 +257,7 @@ function atualizarTabelaPostesNaoInspecionados() {
                 const material = document.createElement('td');
                 const latitude = document.createElement('td');
                 const longitude = document.createElement('td');
-                
+
                 // na resposta do banco, o material do poste vem como "F, M ou C", este valo é alterado para ferro madeira ou concreto --
                 switch (poste.material) {
                     case 'F': material.innerHTML = 'Ferro'; break;
@@ -336,7 +334,7 @@ function atualizarGraficoSaudeIluminacao() {
         if (erro) {
             alert('Não foi dessa vez');
         } // caso a requisição seja feita com sucesso, o gráfico é criado com a biblioteca Chart.js --
-         else {
+        else {
             // na resposta do servidor, os meses são números, foi criado um array para atribuir o nome do mês a seu número correspondente --
             const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             const labels = [];
@@ -354,8 +352,8 @@ function atualizarGraficoSaudeIluminacao() {
                     labels,
                     datasets: [{
                         label: "Grafico saúde iluminação",
-                        backgroundColor: 'rgb(99, 132, 255)',
-                        borderColor: 'rgb(75, 100, 200)',
+                        backgroundColor: 'rgb(91, 192, 222)',
+                        borderColor: 'rgb(66, 139, 202)',
                         data: resultado.map(r => +r.nota),
                     }]
                 },
@@ -380,8 +378,94 @@ function atualizarGraficoSaudeIluminacao() {
 
 // os eventos que chamam as funções que fazem as requisições ao servidor são atribuidos aos botões --
 document.getElementById('gerar-nota').addEventListener('click', atualizarNotaIluminacao);
-document.getElementById('gerar-lista-postes').addEventListener('click', atualizarTabelaPostes);
 document.getElementById('atualizar-postes-nao-inspecionados').addEventListener('click', atualizarTabelaPostesNaoInspecionados);
 document.getElementById('gerar-grafico').addEventListener('click', atualizarGraficoSaudeIluminacao);
+
+
+//caminhos para as telas --
+const telaCadastroPoste = document.getElementById('tela-cadastro-poste');
+const telaCadastroInspecao = document.getElementById('tela-cadastro-inspecao');
+const telaListaPostes = document.getElementById('tela-lista-postes');
+const telaPostesNaoInspecionados = document.getElementById('tela-postes-nao-inspecionados');
+const telaSaudeDaIluminacaoPublica = document.getElementById('tela-saude-da-iluminacao-publica');
+const telaGrafico = document.getElementById('tela-grafico');
+const todasTelas = document.getElementsByClassName('tela');
+
+//caminhos para os botões --
+const botaoCadastroPoste = document.getElementById('botao-cadastro-postes');
+const botaoCadastroInspecao = document.getElementById('botao-cadastro-inspecao');
+const botaoListaPostes = document.getElementById('botao-lista-postes');
+const botaoPostesNaoInspecionados = document.getElementById('botao-postes-nao-inspecionados');
+const botaoSaudeDaIluminacaoPublica = document.getElementById('botao-saude-iluminacao-publica');
+const botaoGrafico = document.getElementById('botao-grafico');
+const todosOsBotoes = document.getElementsByTagName('a');
+
+//remove o active dos botões --
+function removeActiveBotoes() {
+    for (let i = 0; i < todosOsBotoes.length; i++) {
+        todosOsBotoes[i].classList.remove("active");
+    };
+}
+
+
+//remove todas as telas --
+function desativaTodasTelas() {
+    for (let i = 0; i < todasTelas.length; i++) {
+        todasTelas[i].style.display = 'none';
+    };
+}
+
+//eventos que trocam as telas telas --
+document.getElementById('botao-cadastro-postes').addEventListener('click', (event) => {
+    event.preventDefault();
+    removeActiveBotoes();
+    desativaTodasTelas();
+    telaCadastroPoste.style.display = 'block';
+    botaoCadastroPoste.classList.add("active");
+});
+document.getElementById('botao-cadastro-inspecao').addEventListener('click', (event) => {
+    event.preventDefault();
+    removeActiveBotoes();
+    desativaTodasTelas();
+    telaCadastroInspecao.style.display = 'block';
+    botaoCadastroInspecao.classList.add("active");
+});
+document.getElementById('botao-lista-postes').addEventListener('click', (event) => {
+    event.preventDefault();
+    atualizarTabelaPostes();
+    removeActiveBotoes();
+    desativaTodasTelas();
+    telaListaPostes.style.display = 'block';
+    botaoListaPostes.classList.add("active");
+});
+document.getElementById('botao-postes-nao-inspecionados').addEventListener('click', (event) => {
+    event.preventDefault();
+    removeActiveBotoes();
+    desativaTodasTelas();
+    telaPostesNaoInspecionados.style.display = 'block';
+    botaoPostesNaoInspecionados.classList.add("active");
+});
+document.getElementById('botao-saude-iluminacao-publica').addEventListener('click', (event) => {
+    event.preventDefault();
+    removeActiveBotoes();
+    desativaTodasTelas();
+    telaSaudeDaIluminacaoPublica.style.display = 'block';
+    botaoSaudeDaIluminacaoPublica.classList.add("active");
+});
+document.getElementById('botao-grafico').addEventListener('click', (event) => {
+    event.preventDefault();
+    removeActiveBotoes();
+    desativaTodasTelas();
+    telaGrafico.style.display = 'block';
+    botaoGrafico.classList.add("active");
+});
+document.getElementById('home').addEventListener('click', (event) => {
+    event.preventDefault();
+    removeActiveBotoes();
+    telaCadastroPoste.style.display = 'block';
+    botaoCadastroPoste.classList.add("active");
+});
+
+
 
 
